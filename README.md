@@ -1,14 +1,35 @@
-# AriaCare: AI Voice Receptionist for Hospitals
+# MediCall_AI_Receptionist
 
-AriaCare is a voice-first hospital receptionist demo that conducts natural patient conversations, captures booking details, and stores records in Google Sheets.
+MediCall_AI_Receptionist is a voice-first hospital receptionist demo powered by NVIDIA PersonaPlex. It conducts natural patient conversations, captures booking details, and stores records in Google Sheets.
 
 The current demo is optimized for local execution with:
 - `api-server` for AI, extraction, and Google Sheets persistence
 - `ui` for a polished web interface with microphone input, speech output, and an animated orb
 
+## PersonaPlex
+
+PersonaPlex is the core model concept behind this project's conversational behavior.
+
+- Model family: NVIDIA PersonaPlex
+- Intended capability: real-time, full-duplex speech conversation
+- In this repo:
+  - `services/personaplex.py` is the integration layer
+  - `prompts/receptionist.txt` defines the hospital receptionist persona and guardrails
+
+### Runtime Note
+
+PersonaPlex is a speech-to-speech model that typically runs on GPU infrastructure.  
+For this local demo pipeline, the conversation layer uses a compatible Hugging Face chat model path through the same `personaplex.py` service contract, so the end-to-end app flow can be tested locally while preserving the PersonaPlex-oriented architecture.
+
+### PersonaPlex References
+
+- Hugging Face model page: [nvidia/personaplex-7b-v1](https://huggingface.co/nvidia/personaplex-7b-v1)
+- Project repository: [NVIDIA/personaplex](https://github.com/NVIDIA/personaplex)
+
 ## Core Features
 
 - Real-time voice conversation in the browser
+- PersonaPlex-oriented receptionist pipeline and prompt orchestration
 - AI receptionist behavior with strict non-hallucination prompt rules
 - Automatic extraction of:
   - patient name
@@ -27,6 +48,7 @@ Browser UI (mic + speaker)
         |
         v
 FastAPI API Server (Python)
+  - PersonaPlex integration layer
   - /conversation/chat
   - /conversation/finalize
   - /conversation/register
@@ -69,7 +91,7 @@ hospital-ai-receptionist/
 - Python 3.11+
 - Node.js 18+
 - Google Cloud service account with Sheets API and Drive API enabled
-- Hugging Face API token
+- Hugging Face API token (for the PersonaPlex integration path)
 - SendGrid API key (optional for reminder emails)
 
 ## Setup
@@ -87,6 +109,8 @@ cp .env.example .env
 Set values in `api-server/.env`, then place your Google service account key file in `api-server/` and keep:
 
 ```env
+HF_API_KEY=your_huggingface_token
+HF_PERSONAPLEX_MODEL=meta-llama/Meta-Llama-3-8B-Instruct
 GOOGLE_SHEETS_CREDENTIALS_JSON=credentials.json
 ```
 
@@ -145,7 +169,7 @@ Create a spreadsheet with two tabs.
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/health` | Health check |
-| POST | `/conversation/chat` | Chat turn for AI receptionist |
+| POST | `/conversation/chat` | Chat turn via PersonaPlex integration service |
 | POST | `/conversation/finalize` | Extract and persist data from full conversation history |
 | POST | `/conversation/lookup` | Find patient by name |
 | POST | `/conversation/register` | Register patient |
