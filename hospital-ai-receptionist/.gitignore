@@ -1,0 +1,48 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Python envs
+venv/
+.venv/
+api-server/venv/
+
+# Node
+node_modules/
+voice-server/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+api-server/.env
+voice-server/.env
+api-server/credentials.json
+*.pem
+*.key
+*.crt
+
+# Runtime artifacts
+*.log
+*.pid
+*.tmp
+*.bak
+
+# Archived legacy scripts (contain old local test credentials)
+legacy/
+

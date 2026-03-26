@@ -1,0 +1,64 @@
+name: publish dashboard
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: 'Version to use for Docker tags'
+        required: false
+        type: string
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to use for Docker tags'
+        required: false
+        type: string
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22.x"
+
+      - name: Get version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            echo "LERNA_VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+          else
+            lerna_version=$(node -p "require('./lerna.json').version")
+            echo "LERNA_VERSION=$lerna_version" >> $GITHUB_ENV
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Publish Dashboard to Docker Hub
+        uses: elgohr/Publish-Docker-Github-Action@v5
+        env:
+          DASHBOARD_EDITION: cloud
+          DASHBOARD_VERSION: ${{ env.LERNA_VERSION }}
+          DASHBOARD_API_URL: https://api.fonoster.com
+          DASHBOARD_AUTH_GITHUB_ENABLED: true
+          DASHBOARD_AUTH_GITHUB_CLIENT_ID: 176eada057a4bbd96736
+          DASHBOARD_AUTH_GITHUB_URL: https://github.com/login/oauth/authorize
+          DASHBOARD_AUTH_GITHUB_CALLBACK_URL: https://app.fonoster.com/oauth/github/callback
+          DASHBOARD_RESET_PASSWORD_URL: https://app.fonoster.com/auth/reset-password
+        with:
+          name: fonoster/dashboard
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          context: ./mods/dashboard
+          dockerfile: ./mods/dashboard/Dockerfile
+          tags: "latest,${{ env.LERNA_VERSION }}"
+          platforms: linux/amd64,linux/arm64
+          buildargs: DASHBOARD_EDITION, DASHBOARD_VERSION, DASHBOARD_API_URL, DASHBOARD_AUTH_GITHUB_ENABLED, DASHBOARD_AUTH_GITHUB_CLIENT_ID, DASHBOARD_AUTH_GITHUB_URL, DASHBOARD_AUTH_GITHUB_CALLBACK_URL, DASHBOARD_RESET_PASSWORD_URL

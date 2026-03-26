@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aria - City Hospital AI Receptionist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="bg-glow"></div>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="dot"></span>
+        <span>City Hospital AI</span>
+      </div>
+      <h1>Aria Reception Desk</h1>
+      <p>Voice-first care assistant inspired by DeepMind aesthetics</p>
+    </header>
+
+    <section class="orb-panel">
+      <div id="siriOrb" class="siri-orb idle">
+        <div class="core"></div>
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
+      </div>
+      <div id="statusText" class="status">Tap mic and start speaking</div>
+    </section>
+
+    <section class="controls">
+      <button id="bookBtn" class="btn primary">Book an Appointment</button>
+    </section>
+
+    <section class="chat-card">
+      <div id="chatLog" class="chat-log"></div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>

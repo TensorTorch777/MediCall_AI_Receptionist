@@ -1,0 +1,147 @@
+:root {
+  --bg: #060814;
+  --panel: rgba(19, 25, 45, 0.7);
+  --stroke: rgba(255, 255, 255, 0.12);
+  --text: #f2f7ff;
+  --muted: #a9b5d0;
+  --accent: #79a7ff;
+  --accent-2: #70ffd8;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Inter, system-ui, sans-serif;
+  color: var(--text);
+  background: radial-gradient(1200px 700px at 20% -10%, #1a2f63 0%, transparent 50%),
+              radial-gradient(900px 600px at 90% 0%, #1e3f44 0%, transparent 50%),
+              var(--bg);
+}
+
+.bg-glow {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  background: radial-gradient(500px 300px at 50% 25%, rgba(121, 167, 255, 0.2), transparent 70%);
+}
+
+.app { max-width: 980px; margin: 0 auto; padding: 32px 20px 40px; position: relative; z-index: 1; }
+.topbar h1 { margin: 10px 0 8px; font-size: clamp(30px, 4vw, 44px); }
+.topbar p { margin: 0; color: var(--muted); }
+.brand { display: inline-flex; align-items: center; gap: 8px; color: #c5d8ff; font-weight: 600; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 0 14px var(--accent); }
+
+.orb-panel, .controls, .chat-card {
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+}
+
+.orb-panel {
+  margin-top: 24px;
+  padding: 24px;
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+}
+
+.siri-orb {
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.core {
+  width: 74px; height: 74px; border-radius: 50%;
+  background: conic-gradient(from 40deg, #72a5ff, #73ffe0, #a48dff, #72a5ff);
+  filter: blur(0.2px);
+  box-shadow: 0 0 44px rgba(114, 165, 255, 0.75), 0 0 70px rgba(115, 255, 224, 0.4);
+}
+.ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+.ring-1 { transform: scale(1.05); }
+.ring-2 { transform: scale(1.2); opacity: 0.6; }
+.ring-3 { transform: scale(1.35); opacity: 0.35; }
+
+.siri-orb.idle .core { animation: breathe 3.2s ease-in-out infinite; }
+.siri-orb.listening .core { animation: listenPulse 0.8s ease-in-out infinite; }
+.siri-orb.speaking .core { animation: speakPulse 0.45s ease-in-out infinite; }
+.siri-orb.speaking .ring-1 { animation: ripple 0.9s linear infinite; }
+.siri-orb.speaking .ring-2 { animation: ripple 1.2s linear infinite; }
+.siri-orb.speaking .ring-3 { animation: ripple 1.4s linear infinite; }
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+@keyframes listenPulse {
+  0%, 100% { transform: scale(1.02); box-shadow: 0 0 44px rgba(114, 165, 255, 0.75); }
+  50% { transform: scale(1.2); box-shadow: 0 0 70px rgba(115, 255, 224, 0.6); }
+}
+@keyframes speakPulse {
+  0%, 100% { transform: scale(1.05); }
+  50% { transform: scale(1.33); }
+}
+@keyframes ripple {
+  from { transform: scale(1.02); opacity: 0.45; }
+  to { transform: scale(1.42); opacity: 0; }
+}
+
+.status { color: #cfe0ff; font-weight: 500; }
+
+.controls {
+  margin-top: 16px;
+  padding: 14px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  border: 1px solid var(--stroke);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn.primary { background: linear-gradient(135deg, #2f66ff, #38b9a5); border: 0; }
+.btn.accent { background: linear-gradient(135deg, #7d64ff, #5897ff); border: 0; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.chat-card { margin-top: 16px; padding: 14px; }
+.chat-log {
+  max-height: 360px;
+  overflow: auto;
+  display: grid;
+  gap: 10px;
+  padding: 6px;
+}
+.msg {
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  padding: 10px 12px;
+  line-height: 1.45;
+}
+.msg.user { justify-self: end; max-width: 75%; background: rgba(61, 95, 165, 0.35); }
+.msg.ai { justify-self: start; max-width: 85%; background: rgba(35, 48, 86, 0.6); }
+
+.composer {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+input {
+  width: 100%;
+  border: 1px solid var(--stroke);
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
